@@ -2,6 +2,7 @@ Shader "Custom/outline"
 {
     Properties
     {
+        _OutlineColor("OutlineColor", color) =(1,1,1,1)
         _OutlineWidth("OutlineWidth", float) = 0.1
     }
     SubShader
@@ -37,6 +38,7 @@ Shader "Custom/outline"
                 float4 positionCS : SV_POSITION;
             };
 
+            half4 _OutlineColor;
             float _OutlineWidth;
 
             Varyings vert(Attributes v)
@@ -60,7 +62,7 @@ Shader "Custom/outline"
 
             half4 frag(Varyings i) : SV_Target
             {
-                return 0;
+                return _OutlineColor;
             }
             ENDHLSL
         }

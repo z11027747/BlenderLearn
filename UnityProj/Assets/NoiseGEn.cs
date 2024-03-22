@@ -4,9 +4,9 @@ using UnityEditor;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class NoiseGenerater : EditorWindow
+public class NoiseGen : EditorWindow
 {
-    //¡¾ÔëÒôÑ¡ÏîÉèÖÃ¡¿
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½
     public enum NOISEOPTIONS
     {
         PerlinNoise = 0,
@@ -16,7 +16,7 @@ public class NoiseGenerater : EditorWindow
     }
     public NOISEOPTIONS noiseoption;
 
-    //¡¾ÔëÒô¿í¶ÈÉèÖÃ¡¿
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½
     public enum NOISEWIDTH
     {
         W1 = 1,
@@ -32,7 +32,7 @@ public class NoiseGenerater : EditorWindow
         W1024 = 1024,
     }
     public NOISEWIDTH noisewidthoption = NOISEWIDTH.W256;
-    //¡¾ÔëÒô¸ß¶ÈÉèÖÃ¡¿
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½
     public enum NOISEHEIGHT
     {
         H1 = 1,
@@ -49,25 +49,25 @@ public class NoiseGenerater : EditorWindow
     }
     public NOISEHEIGHT noiseheightoption = NOISEHEIGHT.H256;
 
-    int width = 256;//¿í¶È
-    int height = 256;//¸ß¶È
-    float scale = 1.0f;//Ëõ·Å
-    float offsetX = 10.0f;//XÎ»ÒÆ
-    float offsetY = 10.0f;//YÎ»ÒÆ
-    string AssetsName = "SaveImages";//±£´æÎÄ¼þ¼ÐÃû×Ö
-    Texture2D texture;//ÎÆÀí³õÊ¼»¯
-    Vector2 scrollPos;//½çÃæDropDown
+    int width = 256;//ï¿½ï¿½ï¿½ï¿½
+    int height = 256;//ï¿½ß¶ï¿½
+    float scale = 1.0f;//ï¿½ï¿½ï¿½ï¿½
+    float offsetX = 10.0f;//XÎ»ï¿½ï¿½
+    float offsetY = 10.0f;//YÎ»ï¿½ï¿½
+    string AssetsName = "SaveImages";//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    Texture2D texture;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+    Vector2 scrollPos;//ï¿½ï¿½ï¿½ï¿½DropDown
 
-    [MenuItem("Tools/Free Bird¤ÎÔëÒôÉú³ÉÆ÷")]
-    #region ½çÃæ³õÊ¼»¯
+    [MenuItem("Tools/Free Birdï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
     static void Init()
     {
-        EditorWindow window = GetWindow<NoiseGenerater>();
+        var window = GetWindow<NoiseGen>();
         window.Show();
     }
     #endregion
 
-    #region ÉÏÒ»Ö¡ÉèÖÃ
+    #region ï¿½ï¿½Ò»Ö¡ï¿½ï¿½ï¿½ï¿½
     class NoiseTextureSetting
     {
         public int width = 1;
@@ -80,53 +80,53 @@ public class NoiseGenerater : EditorWindow
     NoiseTextureSetting noiseTextureSetting = new NoiseTextureSetting();
     #endregion
 
-    #region Ö÷½çÃæÉèÖÃ
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void OnGUI()
     {
-        noiseoption = (NOISEOPTIONS)EditorGUILayout.EnumPopup("ÔëÒôÑ¡ÏîÉèÖÃ:", noiseoption);//ÉèÖÃÔëÒôÑ¡Ôñ
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, true, true);//DropDown±ÜÃâ½çÃæ¹ýËÀ
+        noiseoption = (NOISEOPTIONS)EditorGUILayout.EnumPopup("ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:", noiseoption);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, true, true);//DropDownï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         var dirPath = Application.dataPath + "/" + AssetsName + "/";
-        GUILayout.Label("ÎÄ¼þ¼ÐÂ·¾¶:" + dirPath);//µ±Ç°±£´æÎÄ¼þ¼ÐÃû×Ö
-        AssetsName = EditorGUILayout.TextField(AssetsName);//ÎÄ¼þ¼ÐÃû×ÖÉèÖÃ
+        GUILayout.Label("ï¿½Ä¼ï¿½ï¿½ï¿½Â·ï¿½ï¿½:" + dirPath);//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        AssetsName = EditorGUILayout.TextField(AssetsName);//ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("ÔëÒô¿í = ");
-        noisewidthoption = (NOISEWIDTH)EditorGUILayout.EnumPopup(noisewidthoption);//ÔëÒô¿í¶ÈÉèÖÃ
+        GUILayout.Label("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ = ");
+        noisewidthoption = (NOISEWIDTH)EditorGUILayout.EnumPopup(noisewidthoption);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         width = (int)noisewidthoption;
-        GUILayout.Label("ÔëÒô¸ß = ");
-        noiseheightoption = (NOISEHEIGHT)EditorGUILayout.EnumPopup(noiseheightoption);//ÔëÒô¸ß¶ÈÉèÖÃ
+        GUILayout.Label("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ = ");
+        noiseheightoption = (NOISEHEIGHT)EditorGUILayout.EnumPopup(noiseheightoption);//ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½ï¿½ï¿½
         height = (int)noiseheightoption;
-        GUILayout.Label("ÔëÒôËõ·Å = ");
-        scale = EditorGUILayout.Slider(scale, 0.0f, 100.0f);//ÔëÒôËõ·ÅÉèÖÃ
+        GUILayout.Label("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ = ");
+        scale = EditorGUILayout.Slider(scale, 0.0f, 100.0f);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("ÔëÒôÎ»ÒÆX = ");
-        offsetX = EditorGUILayout.FloatField(offsetX);//ÔëÒôÎ»ÒÆÉèÖÃ
-        GUILayout.Label("ÔëÒôÎ»ÒÆY = ");
-        offsetY = EditorGUILayout.FloatField(offsetY);//ÔëÒôÎ»ÒÆÉèÖÃ
+        GUILayout.Label("ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½X = ");
+        offsetX = EditorGUILayout.FloatField(offsetX);//ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        GUILayout.Label("ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½Y = ");
+        offsetY = EditorGUILayout.FloatField(offsetY);//ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         GUILayout.EndHorizontal();
 
         if (NoiseCheck(width, height, scale, noiseoption, offsetX, offsetY))
         {
-            texture = GenerateTexture();//ÐÂ½¨ÌùÍ¼
+            texture = GenerateTexture();//ï¿½Â½ï¿½ï¿½ï¿½Í¼
         }
 
         GUI.skin.button.wordWrap = true;
-        if (GUILayout.Button("±£´æÍ¼Ïñ"))
+        if (GUILayout.Button("ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½"))
         {
-            SaveTexture(texture);//±£´æÍ¼Ïñ
+            SaveTexture(texture);//ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
         }
 
-        GUILayout.Label("ÎÆÀíä¯ÀÀ£º");
-        EditorGUI.DrawPreviewTexture(new Rect(25, 120, width, height), texture);//ÎÆÀíä¯ÀÀ
+        GUILayout.Label("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+        EditorGUI.DrawPreviewTexture(new Rect(25, 120, width, height), texture);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         EditorGUILayout.EndScrollView();
 
         NoiseSettingSave();
     }
     #endregion
 
-    #region ÉèÖÃ±£´æ
+    #region ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½
     void NoiseSettingSave()
     {
         noiseTextureSetting.width = width;
@@ -147,47 +147,47 @@ public class NoiseGenerater : EditorWindow
     }
     #endregion
 
-    #region ±£´æÍ¼Ïñº¯Êý
+    #region ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
     void SaveTexture(Texture2D texture)
     {
-        byte[] bytes = texture.EncodeToPNG();//¶ÁÈ¡Í¼ÏñÎªPNG
-        var dirPath = Application.dataPath + "/" + AssetsName + "/";//µ±Ç°ÎÄ¼þ¼ÐÂ·¾¶
-        Debug.Log("Éú³ÉÂ·¾¶:" + dirPath);//Éú³ÉÂ·¾¶Î»ÖÃ
+        byte[] bytes = texture.EncodeToPNG();//ï¿½ï¿½È¡Í¼ï¿½ï¿½ÎªPNG
+        var dirPath = Application.dataPath + "/" + AssetsName + "/";//ï¿½ï¿½Ç°ï¿½Ä¼ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½:" + dirPath);//ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½Î»ï¿½ï¿½
         if (!Directory.Exists(dirPath))
         {
-            Directory.CreateDirectory(dirPath);//Ã»ÓÐÂ·¾¶ÔòÉú³É
+            Directory.CreateDirectory(dirPath);//Ã»ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
         for (int i = 0; i < 1000; i++)
         {
             if (!File.Exists(dirPath + "Image" + "(" + i + ")" + ".png"))
             {
-                File.WriteAllBytes(dirPath + "Image" + "(" + i + ")" + ".png", bytes);//Ð´ÈëÎÄ¼þÀïÃæ
+                File.WriteAllBytes(dirPath + "Image" + "(" + i + ")" + ".png", bytes);//Ð´ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
                 break;
             }
         }
     }
     #endregion
 
-    #region Éú³ÉÌùÍ¼µÄÖ÷º¯Êý
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     Texture2D GenerateTexture()
     {
-        Texture2D texture = new Texture2D(width, height);//ÐÂ½¨ÌùÍ¼
+        Texture2D texture = new Texture2D(width, height);//ï¿½Â½ï¿½ï¿½ï¿½Í¼
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Color color = CalculateColor(x, y);//¼ÆËãÑÕÉ«£¬±éÀúÏñËØ
-                texture.SetPixel(x, y, color);//ÉèÖÃÏñËØÑÕÉ«
+                Color color = CalculateColor(x, y);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                texture.SetPixel(x, y, color);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«
             }
         }
-        texture.Apply();//Ó¦ÓÃÌùÍ¼ÐÞ¸Ä
+        texture.Apply();//Ó¦ï¿½ï¿½ï¿½ï¿½Í¼ï¿½Þ¸ï¿½
 
         return texture;
     }
     #endregion
 
-    #region ÑÕÉ«¼ÆËã½á¹û
+    #region ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     Color CalculateColor(int x, int y)
     {
         float xCoord = (float)x / width * scale + offsetX;//UV X
@@ -197,26 +197,26 @@ public class NoiseGenerater : EditorWindow
         switch (noiseoption)
         {
             case NOISEOPTIONS.PerlinNoise:
-                sample = Mathf.PerlinNoise(xCoord, yCoord);//PerlinÔëÒôÖ±½ÓÊä³ö
+                sample = Mathf.PerlinNoise(xCoord, yCoord);//Perlinï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½
                 break;
             case NOISEOPTIONS.SimpleNoise:
-                sample = value_noise(new Vector2(xCoord, yCoord));//¼òµ¥ÔëÒô
+                sample = value_noise(new Vector2(xCoord, yCoord));//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 break;
             case NOISEOPTIONS.cellular_noise:
-                sample = cellular_noise(new Vector2(xCoord, yCoord));//cellularÔëÒô
+                sample = cellular_noise(new Vector2(xCoord, yCoord));//cellularï¿½ï¿½ï¿½ï¿½
                 break;
             case NOISEOPTIONS.fbm:
-                sample = fbm(new Vector2(xCoord, yCoord));//fbmÔëÒô
+                sample = fbm(new Vector2(xCoord, yCoord));//fbmï¿½ï¿½ï¿½ï¿½
                 break;
             default:
                 break;
         }
 
-        return new Color(sample, sample, sample);//Êä³öÑÕÉ«
+        return new Color(sample, sample, sample);//ï¿½ï¿½ï¿½ï¿½ï¿½É«
     }
     #endregion
 
-    #region ÊýÑ§¿â
+    #region ï¿½ï¿½Ñ§ï¿½ï¿½
     Vector2 mod(Vector2 coord, float a)
     {
         return new Vector2(coord.x % a, coord.y % a);
@@ -253,7 +253,7 @@ public class NoiseGenerater : EditorWindow
     }
     #endregion
 
-    #region ¼òµ¥ÔëÒô
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     float value_noise(Vector2 coord)
     {
@@ -277,7 +277,7 @@ public class NoiseGenerater : EditorWindow
     }
     #endregion
 
-    #region cellularÔëÒô
+    #region cellularï¿½ï¿½ï¿½ï¿½
     float cellular_noise(Vector2 coord)
     {
         Vector2 i = floor(coord);
@@ -304,7 +304,7 @@ public class NoiseGenerater : EditorWindow
     }
     #endregion
 
-    #region fbmÔëÒô
+    #region fbmï¿½ï¿½ï¿½ï¿½
     float fbm(Vector2 coord)
     {
         int OCTAVES = 4;

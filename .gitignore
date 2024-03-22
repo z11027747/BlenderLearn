@@ -3,3 +3,5 @@
 /UnityProj/Logs
 /UnityProj/Temp
 /UnityProj/.vs
+/UnityProj/obj
+*.csproj

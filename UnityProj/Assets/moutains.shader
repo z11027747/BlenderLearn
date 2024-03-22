@@ -1,12 +1,19 @@
 Shader "Custom/moutains" {
 	
 	Properties {
-        [HDR]_Color1("Color1", color) =(1,1,1,1)
-        [HDR]_Color2("Color2", color) =(1,1,1,1)
-        [HDR]_Color3("Color3", color) =(1,1,1,1)
-		_Params1("Params1", vector) = (0,0,0,0)
-		_Params2("Params2", vector) = (0,0,0,0)
-        _NoiseMap("Noise", 2D) = "white" {}
+        _HeightOS("HeightOS", float) =1
+
+        // [HDR]_Color1("Color1", color) =(1,1,1,1)
+        // [HDR]_Color2("Color2", color) =(1,1,1,1)
+        _Color3("Color3", color) =(1,1,1,1)
+
+        _ColorMap("Color", 2D) = "white" {}
+
+		_ParamsSin("Params Sin", vector) = (0,0,0,0)
+		_ParamsLerp("Params Lerp", vector) = (0,0,0,0)
+		_ParamsNoise("Params Noise", vector) = (0,0,0,0)
+
+        // _NoiseMap("Noise", 2D) = "white" {}
 
         _FresnelColor1("FresnelColor1", Color) = (1,1,1,1)
         _FresnelColor2("FresnelColor2", Color) = (1,1,1,1)
@@ -38,23 +45,30 @@ Shader "Custom/moutains" {
 				float4 positionCS : SV_POSITION;
 				float3 positionOS : TEXCOORD0;
 				float3 positionWS : TEXCOORD1;
-				float2 baseUV : TEXCOORD2;
-                float3 normalWS : TEXCOORD3;
+                float3 normalWS : TEXCOORD2;
 			};
+
+            float _HeightOS;
 			
-			float4 _Color1;
-			float4 _Color2;
-		 float4 _Color3;
-			float4 _Params1;
-			float4 _Params2;
+			// float4 _Color1;
+			// float4 _Color2;
+		    float4 _Color3;
+
+			float4 _ParamsSin;
+			float4 _ParamsLerp;
+			float4 _ParamsNoise;
 
             half4 _FresnelColor1;
             half4 _FresnelColor2;
             half4 _FresnelParams;
 
-            SAMPLER(sampler_NoiseMap);
-            TEXTURE2D(_NoiseMap);
-            float4 _NoiseMap_ST;
+            SAMPLER(sampler_clamp_bilinear);
+            // SAMPLER(sampler_repeat_bilinear);
+
+            TEXTURE2D(_ColorMap);
+            float4 _ColorMap_ST;
+            // TEXTURE2D(_NoiseMap);
+            // float4 _NoiseMap_ST;
 
 			Varyings vert (Attributes input) {
 				Varyings output;
@@ -62,64 +76,43 @@ Shader "Custom/moutains" {
                 output.positionOS = input.positionOS;
 				output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
 				output.positionCS = TransformWorldToHClip(output.positionWS);
-                output.baseUV = TRANSFORM_TEX(input.baseUV, _NoiseMap);
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
 				return output;
 			}
 
 			half4 frag (Varyings input) : SV_TARGET {
 
+                // half3 N = normalize(input.normalWS);
+                // half3 V = normalize(_WorldSpaceCameraPos - input.positionWS);
 
-                float yOS = (input.positionOS.y * _Params1.x +_Params1.y);
-                yOS=saturate(yOS);
-                yOS = pow(yOS,_Params1.z);
-                // return yOS;
-
-                half4 lerpColor = lerp(_Color1, _Color2,yOS );
-                // return lerpColor;
+                float x = input.positionOS.x+input.positionOS.z;
+                float y = input.positionOS.y;
                 
+                y += sin((x+_ParamsSin.x)*_ParamsSin.y)*_ParamsSin.z+_ParamsSin.w;
+                y=saturate(y);
+
+                 float lerpY = smoothstep( _ParamsLerp.x, _ParamsLerp.y, y);
+                //    return lerpY;
+
+                // half4 lerpColor = lerp( _Color1, _Color2, lerpY );
+                half4 lerpColor = SAMPLE_TEXTURE2D(_ColorMap, sampler_clamp_bilinear, half2(lerpY,0));
+                //    return lerpColor;
+
+                float mixY = smoothstep( _ParamsLerp.z, _ParamsLerp.w, y);
+                 mixY=saturate(mixY);
+                    // return mixY;
                 
-                half2 testUV = input.positionOS.xy;// +input.positionOS.z*0.002;
-              testUV = testUV*_NoiseMap_ST.xy+_NoiseMap_ST.zw;
+                half2 uv = input.positionOS.xz ;
 
-                float noise = (frac(sin(dot(testUV , half2(12.9898,78.233))) * 43758.5453) - 0.5) * 2.0;
-                return noise;
+                  float noise = frac(sin(dot(uv , half2(12.9898, 78.233))) * 43635.8) ;
+                // float noise = SAMPLE_TEXTURE2D(_NoiseMap, sampler_repeat_bilinear, uv*_NoiseMap_ST.xy).r;
+                //  noise=saturate((noise - _ParamsNoise.x)* _ParamsNoise.y);
 
-               //  half noise = SAMPLE_TEXTURE2D(_NoiseMap, sampler_NoiseMap, testUV).r;
-               //  noise=noise;
-               //   half4 noiseCol = lerp(_Color1,_Color2,1- noise);
-               //  // return noiseCol;
+                half4 noiseColor = lerp( 0, _Color3, step(_ParamsNoise.x, noise)) * _ParamsNoise.y;
+                  noiseColor *= mixY;
+            //   return noiseColor;
 
-               //  if(yOS>_Params2.x&&yOS<_Params2.y)
-               // return  lerpColor+noiseCol;
-               // return lerpColor;
-
-                
-               //  float yOS2 = (input.positionOS.y * _Params2.x +_Params2.y);
-               //  yOS2=saturate(yOS2);
-               //  yOS2 = pow(yOS2,_Params2.z);
-               //   return lerp(1-noise,1,yOS2 ) *_Color2;
-                
-
-                half3 N = normalize(input.normalWS);
-                half3 V = normalize(_WorldSpaceCameraPos - input.positionWS);
-                
-                half fresnel =_FresnelParams.x * pow(abs(max(0, dot(V, N))), _FresnelParams.y);
-
-                // fresnel = step(fresnel, _FresnelParams.z);
-
-                half4 fresnelCol = half4(0.0,0.0,0.0,0.0);
-
-                if (fresnel > _FresnelParams.z)
-                    fresnelCol = _FresnelColor1;
-                else if (fresnel > _FresnelParams.w)
-                    fresnelCol = _FresnelColor2;
-
-
-                    lerpColor.rgb *= fresnelCol;
-
-
-                return lerpColor;
+                return ( lerpColor + noiseColor );
 			}
 
 			ENDHLSL
