@@ -1,16 +1,16 @@
 Shader "Custom/moutains" {
 	
 	Properties {
-        _HeightOS("HeightOS", float) =1
+		_ParamsSize("Size", vector) = (0,0,0,0)
 
         // [HDR]_Color1("Color1", color) =(1,1,1,1)
         // [HDR]_Color2("Color2", color) =(1,1,1,1)
 
         _ColorMap("Color", 2D) = "white" {}
 
-		_ParamsSin("Params Sin", vector) = (0,0,0,0)
-		_ParamsLerp("Params Lerp", vector) = (0,0,0,0)
-		_ParamsNoise("Params Noise", vector) = (0,0,0,0)
+		_ParamsSin("Sin", vector) = (0,0,0,0)
+		_ParamsLerp("Lerp", vector) = (0,0,0,0)
+		_ParamsNoise("Noise", vector) = (0,0,0,0)
 
          _NoiseMap("Noise", 2D) = "white" {}
          _ColorNoise("ColorNoise", color) =(1,1,1,1)
@@ -48,7 +48,7 @@ Shader "Custom/moutains" {
                 float3 normalWS : TEXCOORD2;
 			};
 
-            float _HeightOS;
+            float4 _ParamsSize;
 			
 			// float4 _Color1;
 			// float4 _Color2;
@@ -85,22 +85,36 @@ Shader "Custom/moutains" {
                  half3 N = normalize(input.normalWS);
                 // half3 V = normalize(_WorldSpaceCameraPos - input.positionWS);
 
-                float x = input.positionOS.x+input.positionOS.z;
-                float y = input.positionOS.y/_HeightOS;
-                
-                y += sin((x+_ParamsSin.x)*_ParamsSin.y)*_ParamsSin.z+_ParamsSin.w;
-                y=saturate(y);
+                // return dist;
 
-                 float lerpY = smoothstep( _ParamsLerp.x, _ParamsLerp.y, y);
-                //    return lerpY;
+                float x = input.positionOS.x;// +input.positionOS.z;
+                float y = input.positionOS.y/_ParamsSize.x;
+
+                // float dist = 1-pow(length(input.positionOS.xz)/_ParamsSize.y,_ParamsSize.z)*_ParamsSize.w;
+                float dist = pow(smoothstep(_ParamsSize.y, 0, length(input.positionOS.xz)), _ParamsSize.z)*_ParamsSize.w;
+                // dist = saturate(dist);
+                // return (dist);
+
+                y*=(dist);
+                //   return y;
+                
+                float siny = y + (sin((x+_ParamsSin.x)*_ParamsSin.y)*_ParamsSin.z) * step(_ParamsSin.w,y);
+                 siny=saturate(siny);
+                // return siny;
+
+                float lerpY = siny;//smoothstep(_ParamsLerp.x, _ParamsLerp.y, siny);
+                //  return lerpY;
 
                 // half4 lerpColor = lerp( _Color1, _Color2, lerpY );
                 half4 lerpColor = SAMPLE_TEXTURE2D(_ColorMap, sampler_clamp_bilinear, half2(lerpY,0));
-                //    return lerpColor;
+                      return lerpColor;
 
-                float mixY = smoothstep( _ParamsLerp.z, _ParamsLerp.w, y);
-                 mixY=saturate(mixY);
-                    // return mixY;
+                float mixY1 = smoothstep( 0, _ParamsLerp.z, lerpY); 
+                float mixY2 = smoothstep( 0, _ParamsLerp.w, lerpY); 
+                //  mixY=saturate(mixY);
+                //   return step(_ParamsMix.x, lerpY)-step(_ParamsMix.y, lerpY);
+                float mixY = mixY1-mixY2;
+                //   return mixY1-mixY2;
                 
 
                 //  float noise = frac(sin(dot(input.positionOS.xz , half2(12.9898, 78.233))) * 43635.8) ;
