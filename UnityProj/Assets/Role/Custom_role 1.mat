@@ -35,7 +35,7 @@ Material:
     m_Floats: []
     m_Colors:
     - _Color1: {r: 0, g: 0, b: 0, a: 1}
-    - _Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2: {r: 0, g: 0, b: 0, a: 1}
     - _ColorNoise: {r: 1, g: 1, b: 1, a: 1}
     - _ParamsLerp: {r: 0, g: 0, b: 0, a: 0}
     - _ParamsNoise: {r: 0, g: 0, b: 0, a: 0}
