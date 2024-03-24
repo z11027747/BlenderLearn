@@ -70,6 +70,7 @@
     <Compile Include="Assets\SmoothNormalToTangent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Env\moon.shader" />
     <None Include="Assets\outline.shader" />
     <None Include="Assets\outline_mask.shader" />
     <None Include="Assets\Env\moutains.shader" />
