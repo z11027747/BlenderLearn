@@ -48,7 +48,7 @@ Shader "Custom/water" {
 			 half _Distort;
 			 half _DistortUVSpeedX, _DistortUVSpeedY;
 
-            SAMPLER(sampler_clamp_bilinear);
+            SAMPLER(sampler_clamp_trilinear);
             SAMPLER(sampler_repeat_bilinear);
 
             TEXTURE2D(_MirrorMap);
@@ -73,12 +73,12 @@ Shader "Custom/water" {
                 half2 uv = 1-input.positionOS.xz/_ParamsSize.xy-0.5;
 
                 half2 distortUV = uv*_DistortTex_ST.xy+_DistortTex_ST.zw;
-				distortUV +=  float2(_DistortUVSpeedX, _DistortUVSpeedY) * _Time.y;
+				distortUV += float2(_DistortUVSpeedX, _DistortUVSpeedY) * _Time.y;
                 half4 distortCol = SAMPLE_TEXTURE2D(_DistortTex, sampler_repeat_bilinear, distortUV);
                 uv = lerp(uv, distortCol.rg, _Distort);
 
                 half2 mirrorUV = uv*_MirrorMap_ST.xy+_MirrorMap_ST.zw;
-                half4 mirrorCol = SAMPLE_TEXTURE2D(_MirrorMap, sampler_clamp_bilinear, mirrorUV);
+                half4 mirrorCol = SAMPLE_TEXTURE2D(_MirrorMap, sampler_clamp_trilinear, mirrorUV);
                     //   return lerpColor;
 
                     half3 N = normalize(input.normalWS);

@@ -41,7 +41,7 @@ Material:
     - _DistortUVSpeedX: 0.1
     - _DistortUVSpeedY: 0.1
     m_Colors:
-    - _Color: {r: 0.372864, g: 0.48651594, b: 0.5943396, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color1: {r: 0.35640025, g: 0.47353154, b: 0.5457247, a: 1}
     - _Color2: {r: 0.022173883, g: 0.06124607, b: 0.116970696, a: 1}
     - _ParamsSize: {r: 10, g: 10, b: 0, a: 0}
