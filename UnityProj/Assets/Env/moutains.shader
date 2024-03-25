@@ -3,9 +3,6 @@ Shader "Custom/moutains" {
 	Properties {
 		_ParamsSize("Size", vector) = (0,0,0,0)
 
-        // [HDR]_Color1("Color1", color) =(1,1,1,1)
-        // [HDR]_Color2("Color2", color) =(1,1,1,1)
-
         _ColorMap("Color", 2D) = "white" {}
 
 		_ParamsSin("Sin", vector) = (0,0,0,0)
@@ -14,10 +11,6 @@ Shader "Custom/moutains" {
 
          _NoiseMap("Noise", 2D) = "white" {}
          _ColorNoise("ColorNoise", color) =(1,1,1,1)
-
-        // _FresnelColor1("FresnelColor1", Color) = (1,1,1,1)
-        // _FresnelColor2("FresnelColor2", Color) = (1,1,1,1)
-        // _FresnelParams("FresnelParams", Vector) = (0,0,1,1)
 	}
 	
 	
@@ -50,17 +43,11 @@ Shader "Custom/moutains" {
 
             float4 _ParamsSize;
 			
-			// float4 _Color1;
-			// float4 _Color2;
 		    float4 _ColorNoise;
 
 			float4 _ParamsSin;
 			float4 _ParamsLerp;
 			float4 _ParamsNoise;
-
-            // half4 _FresnelColor1;
-            // half4 _FresnelColor2;
-            // half4 _FresnelParams;
 
             SAMPLER(sampler_clamp_bilinear);
              SAMPLER(sampler_repeat_bilinear);

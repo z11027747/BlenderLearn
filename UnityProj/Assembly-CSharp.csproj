@@ -67,10 +67,15 @@
   <ItemGroup>
     <Compile Include="Assets\Env\NoiseGen.cs" />
     <Compile Include="Assets\Env\RampTexGen.cs" />
+    <Compile Include="Assets\Role\RoleControl.cs" />
+    <Compile Include="Assets\Role\RoleCamera.cs" />
     <Compile Include="Assets\SmoothNormalToTangent.cs" />
+    <Compile Include="Assets\Env\MirrorCamera.cs" />
+    <Compile Include="Assets\Env\MirrorPlane.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Env\moon.shader" />
+    <None Include="Assets\Env\water.shader" />
     <None Include="Assets\outline.shader" />
     <None Include="Assets\outline_mask.shader" />
     <None Include="Assets\Env\moutains.shader" />
