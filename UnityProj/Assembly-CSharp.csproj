@@ -69,9 +69,9 @@
     <Compile Include="Assets\Env\RampTexGen.cs" />
     <Compile Include="Assets\Samples\Universal RP\14.0.8\URP Package Samples\LensFlares\Scripts\ScreenSpacePlacement.cs" />
     <Compile Include="Assets\Role\RoleControl.cs" />
+    <Compile Include="Assets\SmoothNormalToColor.cs" />
     <Compile Include="Assets\Role\RoleCamera.cs" />
     <Compile Include="Assets\Samples\Universal RP\14.0.8\URP Package Samples\CameraStacking\3D Skybox\Scripts\SkyboxCamera.cs" />
-    <Compile Include="Assets\SmoothNormalToTangent.cs" />
     <Compile Include="Assets\Samples\Universal RP\14.0.8\URP Package Samples\RendererFeatures\KeepFrame\KeepFrameFeature.cs" />
     <Compile Include="Assets\Samples\Universal RP\14.0.8\URP Package Samples\SharedAssets\Scripts\FirstPersonController.cs" />
     <Compile Include="Assets\Env\MirrorCamera.cs" />

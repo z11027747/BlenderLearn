@@ -30,7 +30,7 @@ Shader "Custom/outline"
             {
                 float3 positionOS : POSITION;
                 float3 normalOS : NORMAL;
-                float4 tangentOS : TANGENT;
+                float4 color : COLOR;
             };
 
             struct Varyings
@@ -45,7 +45,7 @@ Shader "Custom/outline"
             {
                 Varyings o;
 
-                float3 normalWS = TransformObjectToWorldNormal(v.tangentOS.xyz);
+                float3 normalWS = TransformObjectToWorldNormal(v.color.xyz);
 
                 float3 normalCS = TransformWorldToHClipDir(normalWS);
                 float2 extendDis = normalize(normalCS.xy) * _OutlineWidth; 
@@ -59,6 +59,16 @@ Shader "Custom/outline"
                 o.positionCS = positionCS;
                 return o;
             }
+
+            
+            // float3 viewNormal = mul((float3x3)UNITY_MATRIX_IT_MV, v.tangentOS.xyz);
+            // float3 ndcNormal = normalize(mul((float3x3)UNITY_MATRIX_P, viewNormal.xyz));//将法线变换到NDC空间
+
+            // float aspect = (_ScreenParams.y / _ScreenParams.x);//求得屏幕宽高比
+            // ndcNormal.x *= aspect;
+
+            // float4 positionCS = TransformObjectToHClip(v.positionOS);
+            // positionCS.xy += _OutlineWidth * ndcNormal.xy; 
 
             half4 frag(Varyings i) : SV_Target
             {
